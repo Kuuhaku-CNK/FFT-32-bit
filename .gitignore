@@ -1,0 +1,19 @@
+# ModelSim specific files and directories
+work/
+transcript
+*.wlf
+*.vstf
+*.mpf
+*.mti
+modelsim.ini
+
+# Compiled binaries and logs
+*.o
+*.log
+*.jou
+*.pb
+
+# OS generated files
+.DS_Store
+*~
+*.swp
