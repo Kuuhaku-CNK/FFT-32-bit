@@ -1,5 +1,4 @@
-`timescale 1ns / 1ps
-module fft_agu_32 (
+module AGU (
     input clk, rst, enable, 
     output [4:0] addr_a,addr_b,  
     output [3:0] addr_w,   
