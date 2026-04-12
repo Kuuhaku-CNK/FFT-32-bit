@@ -11,10 +11,12 @@ module Control_unit (
     begin
         if (rst) 
         begin
-            a0 <= 5'd0;
-            b0 <= 5'd0;
-            addr_a_out <= 5'd0;
-            addr_b_out <= 5'd0;
+            a0 <= 0;
+            b0 <= 0;
+            addr_a_out <= 0;
+            addr_b_out <= 0;
+	    we0 <= 0;
+	    we <= 0;
         end
         else 
         begin
