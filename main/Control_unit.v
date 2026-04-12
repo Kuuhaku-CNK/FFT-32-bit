@@ -1,5 +1,5 @@
 module Control_unit (
-    input clk, rst, valid_in, 
+    input clk, rst, 
     input [4:0] addr_a_in,addr_b_in,  
     
     output reg [4:0] addr_a_out, addr_b_out
