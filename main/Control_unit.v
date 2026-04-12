@@ -1,10 +1,12 @@
 module Control_unit (
-    input clk, rst, 
+    input clk, rst,valid, 
     input [4:0] addr_a_in,addr_b_in,  
     
-    output reg [4:0] addr_a_out, addr_b_out
+    output reg [4:0] addr_a_out, addr_b_out,
+    output reg we
 );
-    reg [4:0] a0,a1,b0,b1;
+    reg [4:0] a0,b0;
+    reg we0;
     always @(posedge clk)
     begin
         if (rst) 
@@ -18,9 +20,11 @@ module Control_unit (
         begin
           a0 <= addr_a_in;
           b0 <= addr_b_in;
-        
-          addr_a_out <= a1;
-          addr_b_out <= a1;
+          we0 <= valid;
+          
+          addr_a_out <= a0;
+          addr_b_out <= b0;
+          we <= we0;
         end
     end
 endmodule
