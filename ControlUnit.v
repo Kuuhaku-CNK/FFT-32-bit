@@ -5,7 +5,8 @@ module Control_Unit (
     
     output reg ena_agu,        
     output wire sel, we,            
-    output wire [4:0] addr_a_w, addr_b_w
+    output wire [4:0] addr_a_w, addr_b_w,
+	output wire done_out
 );
     localparam S_IDLE_LOAD = 2'd0;
     localparam S_CALC      = 2'd1;
@@ -83,4 +84,5 @@ module Control_Unit (
 
     assign addr_a_w = (sel == 1'b0) ? bitrev_addr_a : delay_addr_a[2];
     assign addr_b_w = (sel == 1'b0) ? bitrev_addr_b : delay_addr_b[2];
+	assign done_out = (state == S_DONE);
 endmodule

@@ -11,7 +11,10 @@ module fft_top #(
     input wire signed [D-1:0] data_in_a_re, data_in_a_im,
     input wire signed [D-1:0] data_in_b_re, data_in_b_im,
     
-    output wire done
+    output wire done,
+	input wire [4:0] ext_read_addr,
+    output wire signed [D-1:0] data_out_re,
+    output wire signed [D-1:0] data_out_im
 );
 
     // --- 1. KHAI BÁO CÁC ĐƯỜNG DÂY LIÊN KẾT (INTERNAL WIRES) ---
@@ -21,7 +24,7 @@ module fft_top #(
     wire [3:0] addr_w;
     wire valid_agu, done_agu;
     wire ena_agu;
-
+	wire [4:0] final_addr_a_rd = (done) ? ext_read_addr : addr_a_rd;
     // Tín hiệu từ Control Unit
     wire sel, we;
     wire [4:0] addr_a_w, addr_b_w;
@@ -58,7 +61,8 @@ module fft_top #(
         .valid_in(valid_agu), .done_in(done_agu),
         .addr_a_agu(addr_a_rd), .addr_b_agu(addr_b_rd),
         .ena_agu(ena_agu), .sel(sel), .we(we),
-        .addr_a_w(addr_a_w), .addr_b_w(addr_b_w)
+        .addr_a_w(addr_a_w), .addr_b_w(addr_b_w),
+		.done_out(done)
     );
 
     // Khối bộ nhớ 4 cổng (Distributed RAM)
@@ -69,7 +73,7 @@ module fft_top #(
         .clk(clk),
         
         // Cổng Đọc
-        .addr_a_rd(addr_a_rd), 
+        .addr_a_rd(final_addr_a_rd), 
         .dout_a_re(dout_a_re), 
         .dout_a_im(dout_a_im),
         
@@ -103,7 +107,6 @@ module fft_top #(
         .clk(clk), .addr(addr_w),
         .tw_real(w_re), .tw_imag(w_im)
     );
-
-    assign done = (u_cu.state == 2'd2); // S_DONE
-
+	assign data_out_re = dout_a_re;
+    assign data_out_im = dout_a_im;
 endmodule

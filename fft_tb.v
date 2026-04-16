@@ -16,8 +16,11 @@ module fft_tb;
     // Khai báo ngõ ra
     wire done;
 
+    // KHAI BÁO CÁC BIẾN VÒNG LẶP VÀ XỬ LÝ FILE Ở ĐÂY (TRƯỚC INITIAL)
+    integer i, k;
+    integer file_id; 
+
     // --- 2. GỌI MODULE TOP ---
-    // LƯU Ý: Chắc chắn rằng file fft_top.v của bạn cũng đã xóa input 'start'
     fft_top #(
         .D(D), 
         .Q(Q)
@@ -33,8 +36,6 @@ module fft_tb;
     always #5 clk = ~clk; // Chu kỳ 10ns
 
     // --- 4. KỊCH BẢN TEST (STIMULUS) ---
-    integer i;
-    
     initial begin
         // Khởi tạo ban đầu
         clk = 0;
@@ -42,15 +43,10 @@ module fft_tb;
         in_a_re = 0; in_a_im = 0;
         in_b_re = 0; in_b_im = 0;
 
-        // Giữ Reset trong 105ns (Thả reset ở sườn âm để an toàn cho setup-time)
+        // Giữ Reset trong 105ns 
         #105; 
         rst = 0;
         
-        $display("[%0t] --- BAT DAU NAP DU LIEU (LOAD PHASE) ---", $time);
-        
-        // Ngay khi rst = 0, Control_Unit của bạn sẽ ở S_IDLE_LOAD và we = 1
-        // Ta có chính xác 16 chu kỳ clock để bơm 32 mẫu vào RAM
-                
         $display("[%0t] --- BAT DAU NAP DU LIEU (TEST NYQUIST) ---", $time);
         
         for (i = 0; i < 16; i = i + 1) begin
@@ -65,33 +61,22 @@ module fft_tb;
             #10; 
         end 
         
-        // Nạp xong 16 nhịp, Control_Unit của bạn tự động chuyển sang S_CALC
-        // Ta dọn dẹp cổng nạp để không ảnh hưởng
+        // Nạp xong 16 nhịp, dọn dẹp cổng nạp
         in_a_re = 0; in_b_re = 0; 
         
         $display("[%0t] --- DANG TINH TOAN FFT (CALC PHASE) ---", $time);
 
-        // Chờ đợi tín hiệu done từ hệ thống
-        wait (done == 1'b1);
-        integer k, i;
-    integer file_id; // Thêm biến này để xử lý file
-    
-    initial begin
-        // ... (Phần nạp tín hiệu Testcase và chạy chờ giống hệt trước đây) ...
-        
-        $display("[%0t] --- DANG TINH TOAN FFT ---", $time);
-
-        // Chờ đến khi cờ done bật lên 1
+        // Chờ đợi tín hiệu done từ hệ thống bật lên 1
         wait (done == 1'b1);
         $display("[%0t] --- FFT HOAN THANH! ---", $time);
         
         // ========================================================
-        // ĐOẠN CODE MỚI: XUẤT DỮ LIỆU RA FILE TXT
+        // ĐOẠN CODE XUẤT DỮ LIỆU RA FILE TXT
         // ========================================================
         $display("[%0t] --- DANG XUAT DU LIEU RA FILE txt ---", $time);
         
-        // Mở file (nếu chưa có tự tạo, 'w' là chế độ ghi đè)
-        file_id = $fopen("fft_output.txt", "w"); 
+        // Mở file theo đường dẫn tuyệt đối sang ổ C của Windows
+        file_id = $fopen("C:/Users/Khang/Downloads/FFT-32-bit-main/fft_output.txt", "w");
         
         if (file_id) begin
             // Vòng lặp chọc thẳng vào RAM để lấy 32 giá trị ra
@@ -103,16 +88,11 @@ module fft_tb;
             $fclose(file_id); // Đóng file lại để lưu
             $display("[%0t] --- GHI FILE THANH CONG! ---", $time);
         end else begin
-            $display("LOI: Khong the tao file fft_output.txt");
+            $display("LOI: Khong the tao file fft_output.txt. Hay kiem tra lai duong dan!");
         end
         // ========================================================
 
-        #50; 
-        $finish;
-    end        
-        $display("[%0t] --- FFT HOAN THANH! ---", $time);
-        
-        // Chờ thêm một chút để quan sát dạng sóng rồi kết thúc
+        // Chờ thêm một chút để quan sát dạng sóng rồi dừng mô phỏng
         #50; 
         $stop;
     end
