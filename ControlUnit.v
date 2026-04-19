@@ -1,22 +1,18 @@
 `timescale 1ns / 1ps
 module Control_Unit (
     input clk, rst, valid_in, done_in,        
-    input wire [4:0] addr_a_agu, addr_b_agu,
-    
+    input [4:0] addr_a_agu, addr_b_agu,
     output reg ena_agu,        
-    output wire sel, we,            
-    output wire [4:0] addr_a_w, addr_b_w,
-	output wire done_out
+    output sel, we, done_out,          
+    output [4:0] addr_a_w, addr_b_w
 );
     localparam S_IDLE_LOAD = 2'd0;
-    localparam S_CALC      = 2'd1;
-    localparam S_DONE      = 2'd2;
-
+    localparam S_CALC = 2'd1;
+    localparam S_DONE = 2'd2;
     reg [1:0] state, next_state;
     reg [5:0] load_counter;    
-    reg [4:0] delay_addr_a [0:2]; 
-    reg [4:0] delay_addr_b [0:2];
-    reg       delay_valid  [0:2];
+    reg [4:0] delay_addr_a [0:2], delay_addr_b [0:2];
+    reg delay_valid [0:2];
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -68,21 +64,17 @@ module Control_Unit (
             delay_valid[2]  <= delay_valid[1];
         end
     end
-//    assign sel = (state == S_CALC || state == S_DONE) ? 1'b1 : 1'b0;
-//    assign we = (sel == 1'b0 ) ? 1'b1 : (delay_valid[2]);
-//    assign addr_a_w = (sel == 1'b0) ? load_counter : delay_addr_a[2];
-//    assign addr_b_w = (sel == 1'b0) ? load_counter + 1 : delay_addr_b[2];
-
+    
     assign sel = (state == S_CALC || state == S_DONE) ? 1'b1 : 1'b0;
     assign we = (sel == 1'b0) ? 1'b1 : delay_valid[2];
 
     wire [4:0] linear_addr_a = load_counter[4:0];
     wire [4:0] linear_addr_b = load_counter[4:0] + 5'd1;
-
     wire [4:0] bitrev_addr_a = {linear_addr_a[0], linear_addr_a[1], linear_addr_a[2], linear_addr_a[3], linear_addr_a[4]};
     wire [4:0] bitrev_addr_b = {linear_addr_b[0], linear_addr_b[1], linear_addr_b[2], linear_addr_b[3], linear_addr_b[4]};
 
     assign addr_a_w = (sel == 1'b0) ? bitrev_addr_a : delay_addr_a[2];
     assign addr_b_w = (sel == 1'b0) ? bitrev_addr_b : delay_addr_b[2];
-	assign done_out = (state == S_DONE);
+	  assign done_out = (state == S_DONE);
+	  
 endmodule

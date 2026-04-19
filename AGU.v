@@ -1,28 +1,22 @@
 module AGU (
-    input wire clk, 
-    input wire rst, 
-    input wire enable, 
-    output wire [4:0] addr_a,  
-    output wire [4:0] addr_b,  
-    output wire [3:0] addr_w,  
-    output wire valid,       // Đã thêm tín hiệu valid
+    input clk, rst, enable, 
+    output [4:0] addr_a, addr_b,  
+    output [3:0] addr_w,  
+    output valid,      
     output reg done      
 );
   reg [2:0] stage;  
-  reg [5:0] i, j;
+  reg [4:0] i, j;
   wire [5:0] len;
-  
-  assign len = 6'b000001 << stage;
-  assign addr_a = i + j;
-  assign addr_b = i + j + len;
-  
-  // ĐÃ SỬA LỖI OVERFLOW Ở ĐÂY
-  assign addr_w = j << (3'd4 - stage); 
-  
-  // Tín hiệu valid cho Shift Register
+  wire [4:0] ipj;
+  assign len = 6'b1 << stage;
+  assign ipj = i + j;
+  assign addr_a = ipj;
+  assign addr_b = ipj + len;
+  assign addr_w = j << (5'd4 - stage); 
   assign valid = enable && ~done;
 
-  always @(posedge clk) begin
+  always @(posedge clk or posedge rst) begin
     if (rst) begin
       stage <= 0;
       i <= 0;
@@ -30,21 +24,21 @@ module AGU (
       done <= 0;
     end
     else if (enable && ~done) begin
-      if (j == len - 1) begin
+      if (j == len - 1'b1) begin
         j <= 0;
-        if (i >= 32 - (len << 1)) begin   
+        if (i >= 6'd32 - (len << 1)) begin   
           i <= 0;
           if (stage == 3'b100)
              done <= 1;
           else 
-             stage <= stage + 1;
+             stage <= stage + 1'b1;
         end      
         else begin
           i <= i + (len << 1);
         end
       end
       else begin
-        j <= j + 1;
+        j <= j + 1'b1;
       end
     end
   end
