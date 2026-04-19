@@ -10,7 +10,8 @@ module fft_top #(
     // Cổng nạp dữ liệu song song (2 mẫu/clock)
     input wire signed [D-1:0] data_in_a_re, data_in_a_im,
     input wire signed [D-1:0] data_in_b_re, data_in_b_im,
-    
+    output wire [4:0] load_addr_a, // M?I: ??a ??a ch? n?p ra ngo�i
+    output wire [4:0] load_addr_b, // M?I: ??a ??a ch? n?p ra ngo�i
     output wire done,
 	input wire [4:0] ext_read_addr,
     output wire signed [D-1:0] data_out_re,
@@ -107,6 +108,8 @@ module fft_top #(
         .clk(clk), .addr(addr_w),
         .tw_real(w_re), .tw_imag(w_im)
     );
-	assign data_out_re = dout_a_re;
+    assign load_addr_a = addr_a_w;
+    assign load_addr_b = addr_b_w;
+	  assign data_out_re = dout_a_re;
     assign data_out_im = dout_a_im;
 endmodule

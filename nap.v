@@ -16,6 +16,9 @@ module nap (
     // =========================================================================
     // 1. KHAI BÁO DÂY N?I GI?A HAI KH?I (INTERNAL WIRES)
     // =========================================================================
+    wire [4:0] load_addr_a_wire, load_addr_b_wire; // ??a ch? t? FFT sang ROM
+    wire [15:0] rom_data_a_re, rom_data_a_im;      // D? li?u t? ROM v? FFT
+    wire [15:0] rom_data_b_re, rom_data_b_im;
     wire [4:0]  read_addr_wire;      // Dây truy?n ??a ch? t? LCD sang FFT
     wire signed [15:0] fft_out_re_wire; // Dây truy?n data ph?n th?c t? FFT sang LCD
     wire signed [15:0] fft_out_im_wire; // Dây truy?n data ph?n ?o t? FFT sang LCD
@@ -37,9 +40,10 @@ module nap (
         
         // C?NG N?P D? LI?U: 
         // (T?m th?i gán 0. Trong th?c t? b?n c?n n?i các chân này v?i kh?i n?p d? li?u t? ADC ho?c ROM test case)
-        .data_in_a_re(16'd0), .data_in_a_im(16'd0),
-        .data_in_b_re(16'd0), .data_in_b_im(16'd0),
-        
+        .data_in_a_re(rom_data_a_re), .data_in_a_im(rom_data_a_im),
+        .data_in_b_re(rom_data_b_re), .data_in_b_im(rom_data_b_im),
+        .load_addr_a(load_addr_a_wire),
+        .load_addr_b(load_addr_b_wire),
         .done(fft_done_wire),
         
         // NH?N ??A CH? T? LCD: N?i dây t? kh?i LCD vào chân ext_read_addr
@@ -49,7 +53,12 @@ module nap (
         .data_out_re(fft_out_re_wire),
         .data_out_im(fft_out_im_wire)
     );
-
+    input_rom_32 u_input_rom (
+        .addr_a(load_addr_a_wire), 
+        .addr_b(load_addr_b_wire),
+        .data_a_re(rom_data_a_re), .data_a_im(rom_data_a_im),
+        .data_b_re(rom_data_b_re), .data_b_im(rom_data_b_im)
+    );
     de2_ram_lcd u_lcd (
         .CLOCK_50(CLOCK_50),
         .KEY(KEY),             
