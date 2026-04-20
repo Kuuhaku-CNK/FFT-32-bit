@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Mon Apr 20 09:05:52 2026
+Quartus II 64-Bit Version : 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition
+Revision Name : nap
+Top-level Entity Name : nap
+Family : Cyclone II
+Total logic elements : 3,495
+    Total combinational functions : 3,286
+    Dedicated logic registers : 1,462
+Total registers : 1462
+Total pins : 18
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 8
+Total PLLs : 0

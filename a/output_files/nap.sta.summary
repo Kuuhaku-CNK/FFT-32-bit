@@ -1,0 +1,53 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow Model Setup 'de2_ram_lcd:u_lcd|clk_div[17]'
+Slack : -15.192
+TNS   : -98.480
+
+Type  : Slow Model Setup 'CLOCK_50'
+Slack : -6.888
+TNS   : -6207.091
+
+Type  : Slow Model Hold 'CLOCK_50'
+Slack : -2.098
+TNS   : -2.098
+
+Type  : Slow Model Hold 'de2_ram_lcd:u_lcd|clk_div[17]'
+Slack : 0.391
+TNS   : 0.000
+
+Type  : Slow Model Minimum Pulse Width 'CLOCK_50'
+Slack : -1.423
+TNS   : -1650.284
+
+Type  : Slow Model Minimum Pulse Width 'de2_ram_lcd:u_lcd|clk_div[17]'
+Slack : -0.500
+TNS   : -42.000
+
+Type  : Fast Model Setup 'de2_ram_lcd:u_lcd|clk_div[17]'
+Slack : -6.195
+TNS   : -28.377
+
+Type  : Fast Model Setup 'CLOCK_50'
+Slack : -2.546
+TNS   : -2039.186
+
+Type  : Fast Model Hold 'CLOCK_50'
+Slack : -1.427
+TNS   : -1.427
+
+Type  : Fast Model Hold 'de2_ram_lcd:u_lcd|clk_div[17]'
+Slack : 0.215
+TNS   : 0.000
+
+Type  : Fast Model Minimum Pulse Width 'CLOCK_50'
+Slack : -1.519
+TNS   : -1674.092
+
+Type  : Fast Model Minimum Pulse Width 'de2_ram_lcd:u_lcd|clk_div[17]'
+Slack : -0.500
+TNS   : -42.000
+
+------------------------------------------------------------
